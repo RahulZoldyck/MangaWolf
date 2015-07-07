@@ -27,6 +27,21 @@ import java.io.IOException;
 
 
 public class ChapterList extends ActionBarActivity {
+    public String parsestring(String s){
+        s=s.replaceAll(" ","_");
+        for(int i=0;i<s.length();i++){
+            String temp=s.substring(i,i+1);
+            Character t=s.charAt(i);
+            if(!Character.isLetterOrDigit(t))
+
+
+                s=s.replace(temp,"_");
+        }
+        for(int i=0;i<3;i++)
+            s=s.replaceAll("__","_");
+        s=s.toLowerCase();
+        return s;
+    }
 String name,url;
     Integer totchap;
     ImageView img;
@@ -35,6 +50,7 @@ String name,url;
     Integer pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter_list);
 
@@ -43,6 +59,7 @@ String name,url;
             name=b.getString("animename");
             totchap=b.getInt("totpages");
             url=b.getString("url");
+
             nam=(TextView)findViewById(R.id.listname);
             img=(ImageView)findViewById(R.id.listimg);
             nam.setText(name);
@@ -62,7 +79,7 @@ String name,url;
                         //TODO:PReferance SET
                         totpage h=new totpage();
                         pos=totchap-position;
-                        h.execute(MainActivity.URL1+name.replaceAll(" ","_").toLowerCase()+MainActivity.URL+String.valueOf(pos)+ File.separator+"1.html");
+                        h.execute(MainActivity.URL1+parsestring(name)+MainActivity.URL+String.valueOf(pos)+ File.separator+"1.html");
                     }
                 }
         );

@@ -13,8 +13,8 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,8 @@ import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+
 
 
 
@@ -140,9 +142,12 @@ public class MainActivity extends ActionBarActivity
             builder.setTitle("Add New Manga");
             builder.setMessage("Type the name of the Manga correctly with spaces");
 
-            final EditText input = new EditText(this);
+            final AutoCompleteTextView input = new AutoCompleteTextView(this);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.anime_list));
 
             input.setInputType(InputType.TYPE_CLASS_TEXT );
+            input.setAdapter(adapter);
             builder.setView(input);
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
@@ -159,13 +164,10 @@ public class MainActivity extends ActionBarActivity
             });
 
             builder.show();
-            Toast.makeText(MainActivity.this,"Yet to be developed",Toast.LENGTH_SHORT).show();//TODO:Devolop
+
         }
         return super.onOptionsItemSelected(item);
     }
 }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
 

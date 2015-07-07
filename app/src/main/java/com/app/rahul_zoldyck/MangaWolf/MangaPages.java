@@ -24,6 +24,21 @@ import java.net.URL;
 
 
 public class MangaPages extends ActionBarActivity {
+    public String parsestring(String s){
+        s=s.replaceAll(" ","_");
+        for(int i=0;i<s.length();i++){
+            String temp=s.substring(i,i+1);
+            Character t=s.charAt(i);
+            if(!Character.isLetterOrDigit(t))
+
+
+                s=s.replace(temp,"_");
+        }
+        for(int i=0;i<3;i++)
+            s=s.replaceAll("__","_");
+        s=s.toLowerCase();
+        return s;
+    }
 
     String URL,name,Path;
     Integer pno,chap,totpage,temp;//todo: remove temp
@@ -36,14 +51,14 @@ public class MangaPages extends ActionBarActivity {
         img.setEventListener(new Zoomable.Zoldyck() {
             @Override
             public void swipednext() {
-               // Toast.makeText(MangaPages.this,"next",Toast.LENGTH_SHORT).show();
+
                 ++pno;
                 setImage(pno);
             }
 
             @Override
             public void swipedprevious() {
-              //  Toast.makeText(MangaPages.this,"previous",Toast.LENGTH_SHORT).show();
+
                 --pno;
                 setImage(pno);
             }
@@ -60,7 +75,7 @@ public class MangaPages extends ActionBarActivity {
             SharedPreferences.Editor editor=share.edit();
             editor.putString("pno",String.valueOf(pno));
             editor.apply();
-            URL=MainActivity.URL1+name.replaceAll(" ","_").toLowerCase()+MainActivity.URL+String.valueOf(chap)+"/";
+            URL=MainActivity.URL1+parsestring(name)+MainActivity.URL+String.valueOf(chap)+"/";
             Path=MainActivity.PATH+name+ File.separator;
 
 
@@ -186,12 +201,12 @@ public class MangaPages extends ActionBarActivity {
         protected Bitmap doInBackground(String... params) {
 
             try {
-                Log.i("higf", "1");
+
                 doc= Jsoup.connect(params[0]).get();
                 doc2=Jsoup.connect(params[0]).get();
 
             } catch (IOException e) {
-                Log.i("higf","dsfs");
+
                 e.printStackTrace();
             }
             Log.i("higf","2");

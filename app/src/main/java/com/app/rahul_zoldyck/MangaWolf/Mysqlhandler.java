@@ -25,6 +25,24 @@ public class Mysqlhandler extends SQLiteOpenHelper {
     private static final String ANIMENAME="name";
     private static final String ANIMEDESC="description";
     private static final String TOTALCHAP="totalchapter";
+
+    public String parsestring(String s){
+        s=s.replaceAll(" ","_");
+        for(int i=0;i<s.length();i++){
+            String temp=s.substring(i,i+1);
+            Character t=s.charAt(i);
+            if(!Character.isLetterOrDigit(t))
+
+
+                s=s.replace(temp,"_");
+        }
+        for(int i=0;i<3;i++)
+            s=s.replaceAll("__","_");
+        s=s.toLowerCase();
+        return s;
+    }
+
+
     public Mysqlhandler(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, VERSION);
     }
@@ -182,10 +200,13 @@ public class Mysqlhandler extends SQLiteOpenHelper {
         Document doc;
         @Override
         protected String[] doInBackground(String... params) {
-            name=params[0].replaceAll(" ","_").toLowerCase();
+            name=params[0];
+            name=parsestring(params[0]);
             url=MainActivity.URL1+name;
             try {
-                doc= Jsoup.connect(url).get();
+                org.jsoup.Connection con= Jsoup.connect(url);
+                con.timeout(10000);
+                doc= con.get();
             } catch (IOException e) {
                 e.printStackTrace();
                 onProgressUpdate();
@@ -194,11 +215,13 @@ public class Mysqlhandler extends SQLiteOpenHelper {
             Elements e=doc.getElementsByClass("summary");
             for(Element i : e){
                 desc=i.text();
+                Log.i("zold",desc);
             }
             Element f=doc.getElementsByClass("slide").first();
 
-            String ta=f.text();
+
             String sa=f.text().split(" ")[f.text().split(" ").length-1];
+
             String[] sh={params[0],desc,sa};
             Log.i("aka",sa);
             return sh;

@@ -22,6 +22,21 @@ import java.net.URL;
 
 
 public class DownloadService extends IntentService {
+    public String parsestring(String s){
+        s=s.replaceAll(" ","_");
+        for(int i=0;i<s.length();i++){
+            String temp=s.substring(i,i+1);
+            Character t=s.charAt(i);
+            if(!Character.isLetterOrDigit(t))
+
+
+                s=s.replace(temp,"_");
+        }
+        for(int i=0;i<3;i++)
+            s=s.replaceAll("__","_");
+        s=s.toLowerCase();
+        return s;
+    }
     Integer pno, chap, totpage;
     String anime, Path;
     Document doc;
@@ -74,7 +89,7 @@ public class DownloadService extends IntentService {
             File file = new File(Path + String.valueOf(i) + ".jpg");
             if(!file.exists())
 
-            downloadpage(MainActivity.URL1 + anime.replaceAll(" ","_").toLowerCase() + MainActivity.URL + chapt + "/" + String.valueOf(i) + ".html", i);
+            downloadpage(MainActivity.URL1 +parsestring(anime)+ MainActivity.URL + chapt + "/" + String.valueOf(i) + ".html", i);
         }
         Log.i("finish","service finished");
     }
