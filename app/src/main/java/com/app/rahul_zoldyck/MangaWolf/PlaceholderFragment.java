@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,6 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public  class PlaceholderFragment extends Fragment {
+    MyAdapter alladapt,favadapt;
+
+    View v;
+   static ProgressBar spinner;
     public String parsestring(String s){
         s=s.replaceAll(" ","_");
         for(int i=0;i<s.length();i++){
@@ -63,9 +69,17 @@ public  class PlaceholderFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static void addmanga(MainActivity mainActivity, String s) {
+    public static void addmanga(final MainActivity mainActivity, String s) {
+        spinner.setVisibility(View.VISIBLE);
         Mysqlhandler hand = new Mysqlhandler(mainActivity, null);
         hand.getupdated(s);
+        hand.setEventListener(new Mysqlhandler.Blank() {
+            @Override
+            public void downloadfinished() {
+                spinner.setVisibility(View.GONE);
+                mainActivity.startActivity(new Intent(mainActivity,MainActivity.class));
+            }
+        });
     }
 
     private static final String ARG_SECTION_NUMBER = "section_number";
@@ -90,32 +104,115 @@ public  class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         handle = new Mysqlhandler(getActivity(), null);
+
         if (handle.getnames().size() == 0 && !isNetworkAvailable())
             startActivity(new Intent(getActivity(), Interneterror.class));
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        spinner=(ProgressBar)rootView.findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
+        grid = (GridView) rootView.findViewById(R.id.grid);
 
         if (handle.getnames().size() == 0) {
+            spinner.setVisibility(View.VISIBLE);
 
             handle.getupdated("Bleach");
-            Log.i("test", "1");
+            Toast.makeText(getActivity(),"1 completed",Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(),"2 completed",Toast.LENGTH_SHORT).show();
             handle.getupdated("Naruto");
-            Log.i("test", "2");
+            Toast.makeText(getActivity(),"3 completed",Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(),"4 completed",Toast.LENGTH_SHORT).show();
             handle.getupdated("Naruto Gaiden The Seventh Hokage");
-            Log.i("test", "3");
+            Toast.makeText(getActivity(),"5 completed",Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(),"6 completed",Toast.LENGTH_SHORT).show();
             handle.getupdated("Fairy Tail");
-            Log.i("test", "4");
+            Toast.makeText(getActivity(),"7 completed",Toast.LENGTH_SHORT).show();
+
             handle.getupdated("Hunter X Hunter");
+            spinner.setVisibility(View.GONE);
+            handle.setEventListener(
+                    new Mysqlhandler.Blank() {
+                        @Override
+                        public void downloadfinished() {
+                            Log.i("update","updated");
+                            updatepicfirsttime();  //TODO:Update all in sqlite
+                        }
+                    }
+            );
+            //getActivity().startActivity(new Intent(getActivity(),MainActivity.class));
         }
 
+
         Log.i("test", "5");
-        grid = (GridView) rootView.findViewById(R.id.grid);
         all = new ArrayList<>();
 
 
         fav = new ArrayList<>();
         fav = handle.getfavname();
+        all = handle.getnames();
+        alladapt=new MyAdapter(getActivity(),all);
+        favadapt=new MyAdapter(getActivity(),fav);
+        List<String> temp = new ArrayList<>();
+        for (String i : all) {
+            File folder = new File(Environment.getExternalStorageDirectory()
+                    + File.separator + MainActivity.Appname + File.separator + "cover" + File.separator + i + ".jpg");
+            if (!folder.exists()) {
+                temp.add(i);
+            } else {
+                Log.i("result", "Folder already exist");
+            }
+        }
+        v=rootView;
+        if (temp.size() != 0) {
+            String[]s=new String[temp.size()];
+            s=temp.toArray(s);
+            spinner.setVisibility(View.VISIBLE);
+            coverdownload cd = new coverdownload();
+            cd.execute(s);
+
+
+               try {
+                   Thread.sleep(5000);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+
+           return v;
+
+        } else {
+            spinner.setVisibility(View.GONE);
+
+            if (id == 1)
+                grid.setAdapter(alladapt);
+            if (id == 2)
+                grid.setAdapter(favadapt);
+            grid.setOnItemClickListener(
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String names = (String) parent.getItemAtPosition(position);
+                            Intent i = new Intent(getActivity(), MangaInfo.class);
+                            i.putExtra("manganame", names);
+                            startActivity(i);
+                        }
+                    }
+            );
+          return rootView;
+
+        }
+
+
+
+    }
+
+    private void updatepicfirsttime() {
+        spinner.setVisibility(View.VISIBLE);
+
+        all = new ArrayList<>();
         all = handle.getnames();
         List<String> temp = new ArrayList<>();
         for (String i : all) {
@@ -127,29 +224,15 @@ public  class PlaceholderFragment extends Fragment {
                 Log.i("result", "Folder already exist");
             }
         }
+
         if (temp.size() != 0) {
+            String[] s = new String[temp.size()];
+            s = temp.toArray(s);
             coverdownload cd = new coverdownload();
-            cd.execute(temp);
+            cd.execute(s);
 
-        } else {
-          setActivity();
         }
-
-        grid.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String names = (String) parent.getItemAtPosition(position);
-                        // Toast.makeText(getActivity(), names, Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(getActivity(), MangaInfo.class);
-                        i.putExtra("manganame", names);
-                        startActivity(i);
-                    }
-                }
-        );
-        return rootView;
     }
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -160,14 +243,14 @@ public  class PlaceholderFragment extends Fragment {
     }
 
 
-    class coverdownload extends AsyncTask<List<String>, Void, Void> {
+    class coverdownload extends AsyncTask<String[], Void, Void> {
         Document doc = null;
         Elements img = null;
         String url, imgurl;
         Bitmap myBitmap;
 
         @Override
-        protected Void doInBackground(List<String>... params) {
+        protected Void doInBackground(String[]... params) {
             for (String name : params[0]) {
                 url = MainActivity.URL1 + parsestring(name);
 
@@ -207,7 +290,7 @@ public  class PlaceholderFragment extends Fragment {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-    /*--- create a new FileOutputStream and write bytes to file ---*/
+
                     try {
                         fos = new FileOutputStream(file);
                     } catch (FileNotFoundException e) {
@@ -235,17 +318,27 @@ public  class PlaceholderFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-
-            setActivity();
-
+            spinner.setVisibility(View.GONE);
+//            Toast.makeText(getActivity(),"PostExecute",Toast.LENGTH_SHORT).show();
+            Log.i("update","onPostExecute");
+                grid=(GridView)v.findViewById(R.id.grid);
+            if (id == 1)
+                grid.setAdapter(alladapt);
+            if (id == 2 && fav!=null)
+                grid.setAdapter(favadapt);
+            grid.setOnItemClickListener(
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String names = (String) parent.getItemAtPosition(position);
+                            Intent i = new Intent(getActivity(), MangaInfo.class);
+                            i.putExtra("manganame", names);
+                            startActivity(i);
+                        }
+                    }
+            );
             super.onPostExecute(aVoid);
         }
     }
 
-    private void setActivity() {
-        if (id == 1)
-            grid.setAdapter(new MyAdapter(getActivity(), all));
-        if (id == 2)
-            grid.setAdapter(new MyAdapter(getActivity(), fav));
-    }
 }

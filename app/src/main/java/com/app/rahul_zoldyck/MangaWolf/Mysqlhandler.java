@@ -26,6 +26,15 @@ public class Mysqlhandler extends SQLiteOpenHelper {
     private static final String ANIMEDESC="description";
     private static final String TOTALCHAP="totalchapter";
 
+    public interface Blank {
+        public void downloadfinished(); //TODO: only wen original size should be modified
+    }
+
+    private Blank myevent;
+    public void setEventListener(Blank mEventListener) {
+        this.myevent = mEventListener;
+    }
+
     public String parsestring(String s){
         s=s.replaceAll(" ","_");
         for(int i=0;i<s.length();i++){
@@ -236,6 +245,7 @@ public class Mysqlhandler extends SQLiteOpenHelper {
            Float r= Float.parseFloat(tot);
             int total=Math.round(r);
             addentry(nam,des,total);
+            myevent.downloadfinished();
             super.onPostExecute(s);
         }
     }
