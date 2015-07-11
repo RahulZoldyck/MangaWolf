@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -106,56 +105,19 @@ public  class PlaceholderFragment extends Fragment {
 
 
         handle = new Mysqlhandler(getActivity(), null);
-
-        if (handle.getnames().size() == 0 && !isNetworkAvailable())
-            startActivity(new Intent(getActivity(), Interneterror.class));
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         spinner=(ProgressBar)rootView.findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
         grid = (GridView) rootView.findViewById(R.id.grid);
 
-        if (handle.getnames().size() == 0) {
-            spinner.setVisibility(View.VISIBLE);
 
-            handle.getupdated("Bleach");
-            Toast.makeText(getActivity(),"1 completed",Toast.LENGTH_SHORT).show();
-
-            Toast.makeText(getActivity(),"2 completed",Toast.LENGTH_SHORT).show();
-            handle.getupdated("Naruto");
-            Toast.makeText(getActivity(),"3 completed",Toast.LENGTH_SHORT).show();
-
-            Toast.makeText(getActivity(),"4 completed",Toast.LENGTH_SHORT).show();
-            handle.getupdated("Naruto Gaiden The Seventh Hokage");
-            Toast.makeText(getActivity(),"5 completed",Toast.LENGTH_SHORT).show();
-
-            Toast.makeText(getActivity(),"6 completed",Toast.LENGTH_SHORT).show();
-            handle.getupdated("Fairy Tail");
-            Toast.makeText(getActivity(),"7 completed",Toast.LENGTH_SHORT).show();
-
-            handle.getupdated("Hunter X Hunter");
-            spinner.setVisibility(View.GONE);
-            handle.setEventListener(
-                    new Mysqlhandler.Blank() {
-                        @Override
-                        public void downloadfinished() {
-                            Log.i("update","updated");
-                            updatepicfirsttime();  //TODO:Update all in sqlite
-                        }
-                    }
-            );
-            //getActivity().startActivity(new Intent(getActivity(),MainActivity.class));
-        }
-
-
-        Log.i("test", "5");
         all = new ArrayList<>();
 
 
         fav = new ArrayList<>();
         fav = handle.getfavname();
         all = handle.getnames();
-        alladapt=new MyAdapter(getActivity(),all);
-        favadapt=new MyAdapter(getActivity(),fav);
+
         List<String> temp = new ArrayList<>();
         for (String i : all) {
             File folder = new File(Environment.getExternalStorageDirectory()
@@ -166,6 +128,7 @@ public  class PlaceholderFragment extends Fragment {
                 Log.i("result", "Folder already exist");
             }
         }
+
         v=rootView;
         if (temp.size() != 0) {
             String[]s=new String[temp.size()];
@@ -184,6 +147,8 @@ public  class PlaceholderFragment extends Fragment {
            return v;
 
         } else {
+            alladapt=new MyAdapter(getActivity(),all);
+            favadapt=new MyAdapter(getActivity(),fav);
             spinner.setVisibility(View.GONE);
 
             if (id == 1)
@@ -321,6 +286,8 @@ public  class PlaceholderFragment extends Fragment {
             spinner.setVisibility(View.GONE);
 //            Toast.makeText(getActivity(),"PostExecute",Toast.LENGTH_SHORT).show();
             Log.i("update","onPostExecute");
+            alladapt=new MyAdapter(getActivity(),all);
+            favadapt=new MyAdapter(getActivity(),fav);
                 grid=(GridView)v.findViewById(R.id.grid);
             if (id == 1)
                 grid.setAdapter(alladapt);

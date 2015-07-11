@@ -24,11 +24,12 @@ public class MainActivity extends Activity {
         handle=new Mysqlhandler(this,null);
         all=new ArrayList<>();
         all=handle.getnames();
-        if(all==null){
+        if(all.size()==0){
            firsttime f=new firsttime();
             f.execute();
         }
-    startActivity(new Intent(this,OpenerActivity.class));
+        else
+            startActivity(new Intent(this,OpenerActivity.class));
     }
 
 
@@ -75,5 +76,13 @@ public class MainActivity extends Activity {
         for(String s : strings) {
             handle.getupdated(s);
         }
+        handle.setEventListener(
+                new Mysqlhandler.Blank() {
+                    @Override
+                    public void downloadfinished() {
+                        startActivity(new Intent(MainActivity.this,OpenerActivity.class));
+                    }
+                }
+        );
     }
 }
