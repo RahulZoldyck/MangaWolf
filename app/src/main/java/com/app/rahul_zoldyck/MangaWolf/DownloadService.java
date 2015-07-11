@@ -58,7 +58,7 @@ public class DownloadService extends IntentService {
         boolean download=b.getBoolean("download");
         pno = 1;
         boolean re=true;
-        File test=new File(MainActivity.PATH + anime + File.separator+"Chapter" + String.valueOf(chap) );
+        File test=new File(OpenerActivity.PATH + anime + File.separator+"Chapter" + String.valueOf(chap) );
         if(!test.exists())
             re=test.mkdir();
         if(!re)
@@ -75,7 +75,7 @@ public class DownloadService extends IntentService {
             }
 
 
-        Path = MainActivity.PATH + anime + File.separator +"Chapter" + String.valueOf(chap)+File.separator+
+        Path = OpenerActivity.PATH + anime + File.separator +"Chapter" + String.valueOf(chap)+File.separator+
                 "Chapter" + String.valueOf(chap) + " Page";//+String.valueOf(pno)+".jpg";
         downloadchapt(String.valueOf(chap));
     }
@@ -89,7 +89,7 @@ public class DownloadService extends IntentService {
             File file = new File(Path + String.valueOf(i) + ".jpg");
             if(!file.exists())
 
-            downloadpage(MainActivity.URL1 +parsestring(anime)+ MainActivity.URL + chapt + "/" + String.valueOf(i) + ".html", i);
+            downloadpage(OpenerActivity.URL1 +parsestring(anime)+ OpenerActivity.URL + chapt + "/" + String.valueOf(i) + ".html", i);
         }
         Log.i("finish","service finished");
     }

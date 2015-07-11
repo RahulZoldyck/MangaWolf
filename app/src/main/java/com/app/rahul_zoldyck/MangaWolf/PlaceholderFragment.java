@@ -69,7 +69,7 @@ public  class PlaceholderFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static void addmanga(final MainActivity mainActivity, String s) {
+    public static void addmanga(final OpenerActivity mainActivity, String s) {
         spinner.setVisibility(View.VISIBLE);
         Mysqlhandler hand = new Mysqlhandler(mainActivity, null);
         hand.getupdated(s);
@@ -77,7 +77,7 @@ public  class PlaceholderFragment extends Fragment {
             @Override
             public void downloadfinished() {
                 spinner.setVisibility(View.GONE);
-                mainActivity.startActivity(new Intent(mainActivity,MainActivity.class));
+                mainActivity.startActivity(new Intent(mainActivity,OpenerActivity.class));
             }
         });
     }
@@ -159,7 +159,7 @@ public  class PlaceholderFragment extends Fragment {
         List<String> temp = new ArrayList<>();
         for (String i : all) {
             File folder = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + MainActivity.Appname + File.separator + "cover" + File.separator + i + ".jpg");
+                    + File.separator + OpenerActivity.Appname + File.separator + "cover" + File.separator + i + ".jpg");
             if (!folder.exists()) {
                 temp.add(i);
             } else {
@@ -217,7 +217,7 @@ public  class PlaceholderFragment extends Fragment {
         List<String> temp = new ArrayList<>();
         for (String i : all) {
             File folder = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + MainActivity.Appname + File.separator + "cover" + File.separator + i + ".jpg");
+                    + File.separator + OpenerActivity.Appname + File.separator + "cover" + File.separator + i + ".jpg");
             if (!folder.exists()) {
                 temp.add(i);
             } else {
@@ -237,7 +237,7 @@ public  class PlaceholderFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
+        ((OpenerActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
         id = getArguments().getInt(ARG_SECTION_NUMBER);
     }
@@ -252,7 +252,7 @@ public  class PlaceholderFragment extends Fragment {
         @Override
         protected Void doInBackground(String[]... params) {
             for (String name : params[0]) {
-                url = MainActivity.URL1 + parsestring(name);
+                url = OpenerActivity.URL1 + parsestring(name);
 
                 try {
                     doc = Jsoup.connect(url).get();
@@ -283,7 +283,7 @@ public  class PlaceholderFragment extends Fragment {
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                     File file = new File(Environment.getExternalStorageDirectory()
-                            + File.separator + MainActivity.Appname + File.separator + "cover" + File.separator + name + ".jpg");
+                            + File.separator + OpenerActivity.Appname + File.separator + "cover" + File.separator + name + ".jpg");
 
                     try {
                         file.createNewFile();
@@ -301,7 +301,7 @@ public  class PlaceholderFragment extends Fragment {
                             fos.write(bytes.toByteArray());
                             fos.close();
                             Log.i("result", Environment.getExternalStorageDirectory()
-                                    + File.separator + MainActivity.Appname + File.separator + "cover"
+                                    + File.separator + OpenerActivity.Appname + File.separator + "cover"
                                     + File.separator + name + ".jpg" + " img saved ");
                         }
 

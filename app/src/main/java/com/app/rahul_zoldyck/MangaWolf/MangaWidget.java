@@ -55,7 +55,7 @@ public class MangaWidget extends AppWidgetProvider {
         i.putExtra("manganame",MangaWidgetConfigureActivity.loadTitlePref(context, appWidgetId));
             Log.i("wid","widget->"+MangaWidgetConfigureActivity.loadTitlePref(context, appWidgetId));
         PendingIntent p = PendingIntent.getActivity(context, appWidgetId, i, PendingIntent.FLAG_CANCEL_CURRENT);
-        views.setImageViewBitmap(R.id.widgetimage, BitmapFactory.decodeFile(MainActivity.PATH + "cover" + File.separator + widgetText.toString() + ".jpg"));
+        views.setImageViewBitmap(R.id.widgetimage, BitmapFactory.decodeFile(OpenerActivity.PATH + "cover" + File.separator + widgetText.toString() + ".jpg"));
         views.setOnClickPendingIntent(R.id.widgetimage,p);}
         appWidgetManager.updateAppWidget(appWidgetId, views);
 

@@ -31,7 +31,7 @@ String name,desc,path;
             name=b.getString("manganame");
             desc=handle.getdesc(name);
             totchap=handle.gettot(name);
-            path=MainActivity.PATH+"cover"+ File.separator+name+".jpg";
+            path= OpenerActivity.PATH+"cover"+ File.separator+name+".jpg";
             Log.i("enak",path);
             img=(ImageView)findViewById(R.id.infoimg);
             nam=(TextView)findViewById(R.id.infoname);

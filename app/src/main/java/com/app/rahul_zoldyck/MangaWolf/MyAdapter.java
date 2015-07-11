@@ -35,7 +35,7 @@ import java.util.List;
          }
          name.setText(temp);
          img.setImageBitmap(BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()
-                 + File.separator+MainActivity.Appname+File.separator+"cover"
+                 + File.separator+ OpenerActivity.Appname+File.separator+"cover"
                  +File.separator+getItem(position)+".jpg"));
          return v;
      }

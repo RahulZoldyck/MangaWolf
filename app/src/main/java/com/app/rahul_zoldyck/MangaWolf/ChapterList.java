@@ -79,7 +79,7 @@ String name,url;
                         //TODO:PReferance SET
                         totpage h=new totpage();
                         pos=totchap-position;
-                        h.execute(MainActivity.URL1+parsestring(name)+MainActivity.URL+String.valueOf(pos)+ File.separator+"1.html");
+                        h.execute(OpenerActivity.URL1+parsestring(name)+ OpenerActivity.URL+String.valueOf(pos)+ File.separator+"1.html");
                     }
                 }
         );

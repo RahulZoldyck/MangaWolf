@@ -75,8 +75,8 @@ public class MangaPages extends ActionBarActivity {
             SharedPreferences.Editor editor=share.edit();
             editor.putString("pno",String.valueOf(pno));
             editor.apply();
-            URL=MainActivity.URL1+parsestring(name)+MainActivity.URL+String.valueOf(chap)+"/";
-            Path=MainActivity.PATH+name+ File.separator;
+            URL= OpenerActivity.URL1+parsestring(name)+ OpenerActivity.URL+String.valueOf(chap)+"/";
+            Path= OpenerActivity.PATH+name+ File.separator;
 
 
         }
@@ -143,7 +143,7 @@ public class MangaPages extends ActionBarActivity {
             //TODO: fill this up
            sendback();
         }
-        Path=MainActivity.PATH+name+ File.separator+"Chapter" + String.valueOf(chap)+File.separator+"Chapter"+String.valueOf(chap)+" Page"+String.valueOf(pno)+".jpg";
+        Path= OpenerActivity.PATH+name+ File.separator+"Chapter" + String.valueOf(chap)+File.separator+"Chapter"+String.valueOf(chap)+" Page"+String.valueOf(pno)+".jpg";
         File folder = new File(Path);
        // Log.i("test1",Path+"-->"+folder.exists());
        // Toast.makeText(MangaPages.this,Path,Toast.LENGTH_SHORT).show();
@@ -163,7 +163,7 @@ public class MangaPages extends ActionBarActivity {
     }
 
     private void sendback() {
-        String path=MainActivity.PATH+"cover"+ File.separator+name+".jpg";
+        String path= OpenerActivity.PATH+"cover"+ File.separator+name+".jpg";
         Intent i=new Intent(MangaPages.this,ChapterList.class);
         i.putExtra("animename",name);
         i.putExtra("totpages",temp);

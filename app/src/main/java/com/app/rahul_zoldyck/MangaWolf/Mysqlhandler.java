@@ -191,7 +191,7 @@ public class Mysqlhandler extends SQLiteOpenHelper {
     }
     public void getupdated(String name){
         getupdates s=new getupdates();
-        File folder = new File(MainActivity.PATH+name);
+        File folder = new File(OpenerActivity.PATH+name);
         boolean success;
         if (!folder.exists()) {
             success=folder.mkdir();
@@ -211,7 +211,7 @@ public class Mysqlhandler extends SQLiteOpenHelper {
         protected String[] doInBackground(String... params) {
             name=params[0];
             name=parsestring(params[0]);
-            url=MainActivity.URL1+name;
+            url= OpenerActivity.URL1+name;
             try {
                 org.jsoup.Connection con= Jsoup.connect(url);
                 con.timeout(10000);
