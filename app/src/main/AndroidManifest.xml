@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +17,13 @@
             android:name=".OpenerActivity"
             android:label="@string/app_name" >
         </activity>
+
+        <receiver android:name=".AutoStart" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MangaInfo"
             android:label="@string/title_activity_manga_info" >
@@ -34,6 +43,10 @@
         </service>
         <service
             android:name=".CleanerService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name=".UpdateService"
             android:exported="false" >
         </service>
 
@@ -65,6 +78,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".Alarm"
+            android:process=":remote" >
+        </receiver>
+
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

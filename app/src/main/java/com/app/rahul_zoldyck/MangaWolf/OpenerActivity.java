@@ -26,7 +26,7 @@ public class OpenerActivity extends ActionBarActivity
 
 
 
-
+    public static final String SHARETAG="com.app.rahul_zoldyck.MangaWolf";
     public static final String URL="/vTBD/c";
     public static final String URL1="http://mangafox.me/manga/";
     public static final String Appname="MangaWolf";
@@ -134,7 +134,7 @@ public class OpenerActivity extends ActionBarActivity
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            return true;
+            startActivity(new Intent(OpenerActivity.this,Settings.class));
         }
         if(id==R.id.action_add_manga){
 

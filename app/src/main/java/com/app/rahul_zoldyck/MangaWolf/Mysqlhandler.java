@@ -27,7 +27,7 @@ public class Mysqlhandler extends SQLiteOpenHelper {
     private static final String TOTALCHAP="totalchapter";
 
     public interface Blank {
-        public void downloadfinished(); //TODO: only wen original size should be modified
+        public void downloadfinished();
     }
 
     private Blank myevent;
@@ -202,6 +202,34 @@ public class Mysqlhandler extends SQLiteOpenHelper {
         }
         s.execute(name);
 
+    }
+    public ArrayList<Integer> gettotpg(){
+        ArrayList<Integer> names=new ArrayList<>();
+        SQLiteDatabase db5=getWritableDatabase();
+        String query="SELECT "+TOTALCHAP+" FROM "+TABLENAME+" WHERE 1;";
+        Cursor c1=db5.rawQuery(query,null);
+        c1.moveToFirst();
+        while(!c1.isAfterLast()){
+            if(c1.getString(c1.getColumnIndex(TOTALCHAP))!=null){
+                names.add(c1.getInt(c1.getColumnIndex(TOTALCHAP)));
+
+            }
+            c1.moveToNext();
+
+        }
+        c1.close();
+        db5.close();
+        return names;
+
+    }
+
+    public void modpg(String name,Integer pgno){
+        SQLiteDatabase db5=getWritableDatabase();
+        String query="UPDATE "+TABLENAME+" " +
+                "SET "+TOTALCHAP+"="+pgno+
+                " WHERE ("+ANIMENAME+"=\""+name+"\");";
+        db5.execSQL(query);
+        db5.close();
     }
 
     class getupdates extends AsyncTask<String,Void,String[]> {
