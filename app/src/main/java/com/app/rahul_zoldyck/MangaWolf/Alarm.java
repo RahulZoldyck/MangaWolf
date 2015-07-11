@@ -28,7 +28,7 @@ public class Alarm extends BroadcastReceiver {
     public void SetAlarm(Context context)
     {
         SharedPreferences pref=context.getSharedPreferences(OpenerActivity.SHARETAG+"min",Context.MODE_PRIVATE);
-        hrs=pref.getInt("time",1); //TODO: Set Pref in Settings
+        hrs=pref.getInt("time",1);
         AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, Alarm.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);

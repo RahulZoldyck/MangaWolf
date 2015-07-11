@@ -1,6 +1,7 @@
 package com.app.rahul_zoldyck.MangaWolf;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -71,15 +72,79 @@ String name,url;
             chaps[i]="Chapter "+String.valueOf(totchap-i);
         }
 
-     list.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,chaps));
+     list.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,chaps));
         list.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //TODO:PReferance SET
+                        SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
+                        final int test=prefi.getInt("pno",-1);
                         totpage h=new totpage();
                         pos=totchap-position;
-                        h.execute(OpenerActivity.URL1+parsestring(name)+ OpenerActivity.URL+String.valueOf(pos)+ File.separator+"1.html");
+                        if(test==-1) {
+                            h.execute(OpenerActivity.URL1 + parsestring(name) + OpenerActivity.URL + String.valueOf(pos) + File.separator + "1.html");
+                        }
+                        else {
+                            SharedPreferences pref=getSharedPreferences(OpenerActivity.SHARETAG+"download", Context.MODE_PRIVATE);
+                            boolean isdownload=pref.getBoolean("download",false);
+                            if(!isdownload){
+                                new AlertDialog.Builder(ChapterList.this)
+                                        .setTitle("Reading Option")
+                                        .setMessage("Do you want to make this chapter available for offline")
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent j=new Intent(ChapterList.this,DownloadService.class);
+                                                j.putExtra("anime",name);
+                                                j.putExtra("totpages",test);
+                                                j.putExtra("chapter", pos);
+                                                j.putExtra("download",true);
+                                                startService(j);
+                                                Log.i("zold","sent int is "+String.valueOf(test));
+                                                Intent i= new Intent(ChapterList.this,MangaPages.class);
+                                                i.putExtra("name",name);
+                                                i.putExtra("chapter",pos);
+                                                i.putExtra("totpages",test);
+                                                i.putExtra("temp",totchap);
+                                                startActivity(i);
+                                            }
+                                        })
+                                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent j=new Intent(ChapterList.this,DownloadService.class);
+                                                j.putExtra("anime",name);
+                                                j.putExtra("totpages",test);
+                                                j.putExtra("chapter", pos);
+                                                j.putExtra("download",false);
+                                                startService(j);
+                                                Log.i("zold","sent int is "+String.valueOf(test));
+                                                Intent i= new Intent(ChapterList.this,MangaPages.class);
+                                                i.putExtra("name",name);
+                                                i.putExtra("chapter",pos);
+                                                i.putExtra("totpages",test);
+                                                i.putExtra("temp",totchap);
+                                                startActivity(i);
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_menu_upload)
+                                        .show();}
+
+                            else{
+                                Intent j=new Intent(ChapterList.this,DownloadService.class);
+                                j.putExtra("anime",name);
+                                j.putExtra("totpages",test);
+                                j.putExtra("chapter", pos);
+                                j.putExtra("download",true);
+                                startService(j);
+                                Log.i("zold","sent int is "+String.valueOf(test));
+                                Intent i= new Intent(ChapterList.this,MangaPages.class);
+                                i.putExtra("name",name);
+                                i.putExtra("chapter",pos);
+                                i.putExtra("totpages",test);
+                                i.putExtra("temp",totchap);
+                                startActivity(i);
+                            }
+                        }
                     }
                 }
         );
@@ -112,7 +177,9 @@ String name,url;
         @Override
         protected void onPostExecute(Integer integer) {
             raw=integer;
-            //
+            SharedPreferences pref=getSharedPreferences(OpenerActivity.SHARETAG+"download", Context.MODE_PRIVATE);
+            boolean isdownload=pref.getBoolean("download",false);
+            if(!isdownload){
             new AlertDialog.Builder(ChapterList.this)
                     .setTitle("Reading Option")
                     .setMessage("Do you want to make this chapter available for offline")
@@ -131,9 +198,9 @@ String name,url;
                             i.putExtra("chapter",pos);
                             i.putExtra("totpages",raw);
                             i.putExtra("temp",totchap);
-                            SharedPreferences pref=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE); //todo: sharepref
-                            SharedPreferences.Editor editor=pref.edit();
-                            editor.putString("pno",String.valueOf(raw));
+                            SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
+                            SharedPreferences.Editor editor=prefi.edit();
+                            editor.putInt("pno",raw);
                             editor.apply();
 
                             startActivity(i);
@@ -153,18 +220,37 @@ String name,url;
                             i.putExtra("chapter",pos);
                             i.putExtra("totpages",raw);
                             i.putExtra("temp",totchap);
-                            SharedPreferences pref=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE); //todo: sharepref
-                            SharedPreferences.Editor editor=pref.edit();
-                            editor.putString("pno",String.valueOf(raw));
+                            SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
+                            SharedPreferences.Editor editor=prefi.edit();
+                            editor.putInt("pno",raw);
                             editor.apply();
 
                             startActivity(i);
                         }
                     })
                     .setIcon(android.R.drawable.ic_menu_upload)
-                    .show();
-            //
+                    .show();}
 
+            else{
+                Intent j=new Intent(ChapterList.this,DownloadService.class);
+                j.putExtra("anime",name);
+                j.putExtra("totpages",raw);
+                j.putExtra("chapter", pos);
+                j.putExtra("download",true);
+                startService(j);
+                Log.i("zold","sent int is "+String.valueOf(raw));
+                Intent i= new Intent(ChapterList.this,MangaPages.class);
+                i.putExtra("name",name);
+                i.putExtra("chapter",pos);
+                i.putExtra("totpages",raw);
+                i.putExtra("temp",totchap);
+                SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
+                SharedPreferences.Editor editor=prefi.edit();
+                editor.putInt("pno",raw);
+                editor.apply();
+
+                startActivity(i);
+            }
 
             super.onPostExecute(integer);
         }
