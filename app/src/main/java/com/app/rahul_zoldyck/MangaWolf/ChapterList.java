@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -28,6 +30,12 @@ import java.io.IOException;
 
 
 public class ChapterList extends ActionBarActivity {
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     public String parsestring(String s){
         s=s.replaceAll(" ","_");
         for(int i=0;i<s.length();i++){
@@ -99,7 +107,8 @@ String name,url;
                                                 j.putExtra("totpages",test);
                                                 j.putExtra("chapter", pos);
                                                 j.putExtra("download",true);
-                                                startService(j);
+                                                if(isNetworkAvailable())
+                                                    startService(j);
                                                 Log.i("zold","sent int is "+String.valueOf(test));
                                                 Intent i= new Intent(ChapterList.this,MangaPages.class);
                                                 i.putExtra("name",name);
@@ -116,7 +125,8 @@ String name,url;
                                                 j.putExtra("totpages",test);
                                                 j.putExtra("chapter", pos);
                                                 j.putExtra("download",false);
-                                                startService(j);
+                                                if(isNetworkAvailable())
+                                                    startService(j);
                                                 Log.i("zold","sent int is "+String.valueOf(test));
                                                 Intent i= new Intent(ChapterList.this,MangaPages.class);
                                                 i.putExtra("name",name);
@@ -135,7 +145,8 @@ String name,url;
                                 j.putExtra("totpages",test);
                                 j.putExtra("chapter", pos);
                                 j.putExtra("download",true);
-                                startService(j);
+                                if(isNetworkAvailable())
+                                    startService(j);
                                 Log.i("zold","sent int is "+String.valueOf(test));
                                 Intent i= new Intent(ChapterList.this,MangaPages.class);
                                 i.putExtra("name",name);
@@ -191,7 +202,8 @@ String name,url;
                             j.putExtra("totpages",raw);
                             j.putExtra("chapter", pos);
                            j.putExtra("download",true);
-                            startService(j);
+                            if(isNetworkAvailable())
+                                startService(j);
                             Log.i("zold","sent int is "+String.valueOf(raw));
                             Intent i= new Intent(ChapterList.this,MangaPages.class);
                             i.putExtra("name",name);
@@ -213,7 +225,8 @@ String name,url;
                             j.putExtra("totpages",raw);
                             j.putExtra("chapter", pos);
                             j.putExtra("download",false);
-                            startService(j);
+                            if(isNetworkAvailable())
+                                startService(j);
                             Log.i("zold","sent int is "+String.valueOf(raw));
                             Intent i= new Intent(ChapterList.this,MangaPages.class);
                             i.putExtra("name",name);
@@ -237,7 +250,8 @@ String name,url;
                 j.putExtra("totpages",raw);
                 j.putExtra("chapter", pos);
                 j.putExtra("download",true);
-                startService(j);
+                if(isNetworkAvailable())
+                    startService(j);
                 Log.i("zold","sent int is "+String.valueOf(raw));
                 Intent i= new Intent(ChapterList.this,MangaPages.class);
                 i.putExtra("name",name);

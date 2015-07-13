@@ -163,33 +163,9 @@ public class MangaPages extends ActionBarActivity {
     }
 
     private void sendback() {
-        String path= OpenerActivity.PATH+"cover"+ File.separator+name+".jpg";
-        Intent i=new Intent(MangaPages.this,ChapterList.class);
-        i.putExtra("animename",name);
-        i.putExtra("totpages",temp);
-        i.putExtra("url",path);
-        startActivity(i);
+        MangaPages.this.finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_manga_pages, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 

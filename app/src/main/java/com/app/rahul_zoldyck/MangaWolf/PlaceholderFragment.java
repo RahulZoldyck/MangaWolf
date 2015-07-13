@@ -78,6 +78,10 @@ public  class PlaceholderFragment extends Fragment {
                 spinner.setVisibility(View.GONE);
                 mainActivity.startActivity(new Intent(mainActivity,OpenerActivity.class));
             }
+
+            @Override
+            public void downloadlistfinished() {
+            }
         });
     }
 

@@ -28,6 +28,8 @@ public class Mysqlhandler extends SQLiteOpenHelper {
 
     public interface Blank {
         public void downloadfinished();
+
+        public void downloadlistfinished();
     }
 
     private Blank myevent;
@@ -231,7 +233,84 @@ public class Mysqlhandler extends SQLiteOpenHelper {
         db5.execSQL(query);
         db5.close();
     }
+    public void getlistupdated(ArrayList<String> namelist) {
+    for(String name : namelist){
 
+        File folder = new File(OpenerActivity.PATH + name);
+        boolean success;
+        if (!folder.exists()) {
+            success = folder.mkdir();
+            Log.i("result", "Folder created result->" + success);
+        } else {
+            Log.i("result", "Folder already exist");
+        }
+    }
+       getupdateslist s=new getupdateslist();
+        s.execute(namelist);
+
+    }
+
+    class getupdateslist extends AsyncTask<ArrayList<String>,Void,String[]>{
+        String name,url,desc;
+        Document doc;
+
+
+
+        ArrayList<String> all;
+       @Override
+       protected String[] doInBackground(ArrayList<String>... params) {
+           all=new ArrayList<>();
+           all=params[0];
+           name=params[0].get(0);
+           name=parsestring(name);
+           while(name.endsWith("_")){
+               name=name.substring(0,name.length()-1);
+               Log.i("namechange","updated->"+name);
+           }
+           url= OpenerActivity.URL1+name;
+           try {
+               org.jsoup.Connection con= Jsoup.connect(url);
+               con.timeout(10000);
+               doc= con.get();
+           } catch (IOException e) {
+               e.printStackTrace();
+               onProgressUpdate();
+               Log.e("error",e.toString());
+           }
+           Elements e=doc.getElementsByClass("summary");
+           for(Element i : e){
+               desc=i.text();
+               Log.i("zold",desc);
+           }
+           Element f=doc.getElementsByClass("slide").first();
+
+           String sa="null";
+           sa=f.text().split(" ")[f.text().split(" ").length-1];
+
+
+           String[] sh={params[0].get(0),desc,sa};
+           Log.i("aka",sa);
+           return sh;
+       }
+
+        @Override
+        protected void onPostExecute(String[] s) {
+            String tot=s[2];
+            String des=s[1];
+            String nam=s[0];
+            Float r= Float.parseFloat(tot);
+            int total=Math.round(r);
+            addentry(nam,des,total);
+            all.remove(0);
+            if(all.size()!=0){
+                getupdateslist l=new getupdateslist();
+                l.execute(all);
+            }
+            else if(all.size()==0)
+                myevent.downloadlistfinished();
+            super.onPostExecute(s);
+        }
+    }
     class getupdates extends AsyncTask<String,Void,String[]> {
         String name,url,desc;
         Document doc;
@@ -256,8 +335,8 @@ public class Mysqlhandler extends SQLiteOpenHelper {
             }
             Element f=doc.getElementsByClass("slide").first();
 
-
-            String sa=f.text().split(" ")[f.text().split(" ").length-1];
+            String sa="null";
+           sa=f.text().split(" ")[f.text().split(" ").length-1];
 
             String[] sh={params[0],desc,sa};
             Log.i("aka",sa);

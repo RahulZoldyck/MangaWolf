@@ -73,14 +73,17 @@ public class MainActivity extends Activity {
     }
 
     private void addtodb(ArrayList<String> strings) {
-        for(String s : strings) {
-            handle.getupdated(s);
-        }
+       handle.getlistupdated(strings);
         handle.setEventListener(
                 new Mysqlhandler.Blank() {
                     @Override
                     public void downloadfinished() {
+                    }
+
+                    @Override
+                    public void downloadlistfinished() {
                         startActivity(new Intent(MainActivity.this,OpenerActivity.class));
+                        //MainActivity.this.finish();
                     }
                 }
         );
