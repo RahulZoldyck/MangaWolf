@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,6 +19,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class UpdateService extends IntentService{
+    public String parsestring(String s){
+        s=s.replaceAll(" ","_");
+        for(int i=0;i<s.length();i++){
+            String temp=s.substring(i,i+1);
+            Character t=s.charAt(i);
+            if(!Character.isLetterOrDigit(t))
+
+
+                s=s.replace(temp,"_");
+        }
+        for(int i=0;i<3;i++)
+            s=s.replaceAll("__","_");
+        s=s.toLowerCase();
+        while(s.endsWith("_")){
+            s=s.substring(0,s.length()-1);
+            Log.i("namechange", "updated->" + s);
+        }
+        return s;
+    }
     Mysqlhandler handle;
     NotificationCompat.Builder notify;
     ArrayList<String> all;
@@ -39,9 +59,11 @@ public class UpdateService extends IntentService{
         all=handle.getnames();
         pgnos=handle.gettotpg();
         for(String name : all){
+            String urls;
             int pgno;
             pgno=pgnos.get(all.indexOf(name));
-            String url=OpenerActivity.URL1+name;
+            urls=parsestring(name);
+            String url=OpenerActivity.URL1+urls;
             Integer npgno=null;
             try {
 
@@ -50,28 +72,29 @@ public class UpdateService extends IntentService{
                 Document doc= con.get();
                 Element f=doc.getElementsByClass("slide").first();
 
-
-                 npgno=Integer.parseInt(f.text().split(" ")[f.text().split(" ").length-1]);
+                float temp=Float .parseFloat(f.text().split(" ")[f.text().split(" ").length - 1]);
+                 npgno=Math.round(temp);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(npgno!=null){
-                if(npgno!=pgno)
-                    handle.modpg(name,npgno);
-                    notify.setSmallIcon(R.drawable.wolf);
-                    notify.setLargeIcon(BitmapFactory.decodeFile(OpenerActivity.PATH+"cover"+ File.separator+name+".jpg"));
-                    notify.setTicker("New Chapter released in "+name);
-                    notify.setWhen(System.currentTimeMillis());
-                    notify.setContentTitle("New Chapter released in " + name);
-                    notify.setContentText("Check out the latest Chapter " + String.valueOf(npgno) + " of " + name);
-                Intent i=new Intent(this,ChapterList.class);
-                i.putExtra("animename",name);
-                i.putExtra("totpages",npgno);
-                i.putExtra("url",OpenerActivity.PATH+"cover"+ File.separator+name+".jpg");
-                PendingIntent p=PendingIntent.getActivity(c,requestcode,i,PendingIntent.FLAG_UPDATE_CURRENT);
+            if(npgno!=null) {
+                if (npgno != pgno){
+                    handle.modpg(name, npgno);
+                notify.setSmallIcon(R.drawable.whitewolf);
+                notify.setLargeIcon(BitmapFactory.decodeFile(OpenerActivity.PATH + "cover" + File.separator + name + ".jpg"));
+                notify.setTicker("New Chapter released in " + name);
+                notify.setWhen(System.currentTimeMillis());
+                notify.setContentTitle("New Chapter released in " + name);
+                notify.setContentText("Check out the latest Chapter " + String.valueOf(npgno) + " of " + name);
+                Intent i = new Intent(this, ChapterList.class);
+                i.putExtra("animename", name);
+                i.putExtra("totpages", npgno);
+                i.putExtra("url", OpenerActivity.PATH + "cover" + File.separator + name + ".jpg");
+                PendingIntent p = PendingIntent.getActivity(c, requestcode, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 notify.setContentIntent(p);
-                NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-                nm.notify(requestcode,notify.build());
+                NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                nm.notify(requestcode, notify.build());
+            }
             }
         }
     }

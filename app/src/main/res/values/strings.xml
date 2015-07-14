@@ -8,23 +8,19 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_example">Example action</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_manga_info">Manga Info</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_chapter_list">Chapter List</string>
     <string name="title_activity_manga_pages">MangaPages</string>
 
     <string name="title_activity_starter">MangaWolf</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_interneterror">Internet Error</string>
     <string name="title_activity_loading">Loading</string>
     <string name="appwidget_text">Bleach</string>
     <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">MangaWolf</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="addmanga">Add Manga</string>
 </resources>

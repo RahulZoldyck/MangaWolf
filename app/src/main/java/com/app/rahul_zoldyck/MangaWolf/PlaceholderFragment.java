@@ -61,17 +61,16 @@ public  class PlaceholderFragment extends Fragment {
 
     int id = 1;
 
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
     public static void addmanga(final OpenerActivity mainActivity, String s) {
         spinner.setVisibility(View.VISIBLE);
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) mainActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
         Mysqlhandler hand = new Mysqlhandler(mainActivity, null);
-        hand.getupdated(s);
+        if(activeNetworkInfo != null && activeNetworkInfo.isConnected())
+        {hand.getupdated(s);
         hand.setEventListener(new Mysqlhandler.Blank() {
             @Override
             public void downloadfinished() {
@@ -82,7 +81,10 @@ public  class PlaceholderFragment extends Fragment {
             @Override
             public void downloadlistfinished() {
             }
-        });
+        });}
+        else{
+            mainActivity.startActivity(new Intent(mainActivity,Interneterror.class));
+        }
     }
 
     private static final String ARG_SECTION_NUMBER = "section_number";
@@ -178,30 +180,6 @@ public  class PlaceholderFragment extends Fragment {
 
     }
 
-    private void updatepicfirsttime() {
-        spinner.setVisibility(View.VISIBLE);
-
-        all = new ArrayList<>();
-        all = handle.getnames();
-        List<String> temp = new ArrayList<>();
-        for (String i : all) {
-            File folder = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + OpenerActivity.Appname + File.separator + "cover" + File.separator + i + ".jpg");
-            if (!folder.exists()) {
-                temp.add(i);
-            } else {
-                Log.i("result", "Folder already exist");
-            }
-        }
-
-        if (temp.size() != 0) {
-            String[] s = new String[temp.size()];
-            s = temp.toArray(s);
-            coverdownload cd = new coverdownload();
-            cd.execute(s);
-
-        }
-    }
 
     @Override
     public void onAttach(Activity activity) {
