@@ -80,7 +80,7 @@ public class UpdateService extends IntentService{
             if(npgno!=null) {
                 if (npgno != pgno){
                     handle.modpg(name, npgno);
-                notify.setSmallIcon(R.drawable.whitewolf);
+                notify.setSmallIcon(R.drawable.circle_wolf);
                 notify.setLargeIcon(BitmapFactory.decodeFile(OpenerActivity.PATH + "cover" + File.separator + name + ".jpg"));
                 notify.setTicker("New Chapter released in " + name);
                 notify.setWhen(System.currentTimeMillis());

@@ -163,7 +163,7 @@ public class MangaPages extends ActionBarActivity {
     }
 
     private void sendback() {
-        MangaPages.this.finish();
+        finish();
     }
 
 

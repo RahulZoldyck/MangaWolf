@@ -136,9 +136,6 @@ public class OpenerActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             startActivity(new Intent(OpenerActivity.this,Settings.class));
         }
-        if (id == R.id.action_update){
-            startService(new Intent(OpenerActivity.this,UpdateService.class));//TODO:REMOVE
-        }
         if(id==R.id.action_add_manga){
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -57,11 +59,45 @@ public class MainActivity extends Activity {
 
     Mysqlhandler handle;
     ArrayList<String> all;
+    boolean flag=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        File folder = new File(Environment.getExternalStorageDirectory() +File.separator+ OpenerActivity.Appname);
+        boolean success;
+        if (!folder.exists()) {
+            success=folder.mkdir();
+            Log.i("result", "Folder created result->" + success);
+        }
+        else {
+            Log.i("result","Folder already exist");
+        }
+        File folder1 = new File(Environment.getExternalStorageDirectory() +
+                File.separator+ OpenerActivity.Appname+File.separator+"cover");
+        boolean success1;
+        if (!folder1.exists()) {
+            success1=folder1.mkdir();
+            File nomedia=new File(Environment.getExternalStorageDirectory() +
+                    File.separator+ OpenerActivity.Appname+File.separator+"cover" +
+                    File.separator+".nomedia");
+            if((!nomedia.exists()) )
+                try {
+                    boolean re=nomedia.createNewFile();
+                    if(!re)
+                        Log.e("path", nomedia + "Not Created");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            Log.i("result","Folder created result->"+success1);
+        }
+        else {
+            Log.i("result", "Folder already exist");
+        }
         handle=new Mysqlhandler(this,null);
+
         all=new ArrayList<>();
         all=handle.getnames();
         if(all.size()==0){
@@ -108,36 +144,49 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
+            if (flag)
             addtodb(strings);
+            else{
+                coverdownload c=new coverdownload();
+                String[] s=new String[strings.size()];
+                s=strings.toArray(s);
+                c.execute(s);
+            }
+
             super.onPostExecute(strings);
         }
 
 
     }
 
-    private void addtodb(final ArrayList<String> strings) {
+    public void addtodb( ArrayList<String> strings) {
+
+
        handle.getlistupdated(strings);
+
         handle.setEventListener(
                 new Mysqlhandler.Blank() {
+
                     @Override
                     public void downloadfinished() {
                     }
 
                     @Override
                     public void downloadlistfinished() {
-                        getimage(strings);
+
+
+                        getimage();
                     }
                 }
         );
     }
 
-    private void getimage(ArrayList<String> strings) {
+    public void getimage() {
         TextView t=(TextView)findViewById(R.id.maintext);
         t.setText("Downloading cover images");
-        coverdownload c=new coverdownload();
-        String[] s=new String[strings.size()];
-        s=strings.toArray(s);
-        c.execute(s);
+        flag=false;
+        firsttime f=new firsttime();
+        f.execute();
 
     }
     class coverdownload extends AsyncTask<String[], Void, Void> {
@@ -150,6 +199,7 @@ public class MainActivity extends Activity {
         protected Void doInBackground(String[]... params) {
             for (String name : params[0]) {
                 url = OpenerActivity.URL1 + parsestring(name);
+                Log.i("final","url-->"+url);
 
                 try {
                     doc = Jsoup.connect(url).get();
@@ -161,8 +211,10 @@ public class MainActivity extends Activity {
                     img = doc.getElementsByTag("img");
 
                     for (Element i : img) {
-                        if (i.attr("src").contains("manga"))
+                        if (i.attr("src").contains("cover.jpg")) {
                             imgurl = i.attr("src");
+                            Log.i("final","imgurl-->"+imgurl);
+                        }
                     }
                     try {
                         URL urls = new URL(imgurl);
@@ -215,8 +267,15 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            startActivity(new Intent(MainActivity.this,OpenerActivity.class));
+           startActivity(new Intent(MainActivity.this,OpenerActivity.class));
+
             super.onPostExecute(aVoid);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        finish();
+        super.onPause();
     }
 }

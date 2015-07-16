@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.app.rahul_zoldyck.MangaWolf.MangaInfo">
+    tools:context="com.app.rahul_zoldyck.MangaWolf.MangaInfo"
+    android:background="@drawable/black">
 
 
     <RelativeLayout
@@ -25,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/infoimg"
             android:layout_centerHorizontal="true"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:textColor="#ffffff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +36,9 @@
             android:text="Description :"
             android:id="@+id/textView"
             android:layout_below="@+id/infoname"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:textColor="#BAD3FA"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,7 +49,7 @@
             android:layout_below="@+id/textView"
             android:layout_margin="10dp"
 
-            />
+            android:textColor="#ffffff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -56,7 +60,8 @@
             android:layout_below="@+id/desc"
             android:layout_alignLeft="@+id/textView"
             android:layout_alignStart="@+id/textView"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:textColor="#BAD3FA" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,7 +72,8 @@
             android:layout_below="@+id/desc"
             android:layout_toRightOf="@+id/textView3"
             android:layout_toEndOf="@+id/textView3"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:textColor="#ffffff" />
 
         <Button
             android:layout_width="wrap_content"

@@ -14,27 +14,60 @@
         android:layout_height="wrap_content"
         android:id="@+id/progressBar1"
         android:progressDrawable="@drawable/circular_loading"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/textView10"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="This might take some time. \nConfiguring for First time user."
+        android:text="Downloading popular mangas"
         android:id="@+id/maintext"
-        android:layout_below="@+id/progressBar1"
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
-        android:textColor="#ffffff" />
+        android:layout_margin="15dp" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Don't turn off your Internet Connection"
         android:id="@+id/textView9"
+        android:textColor="#ffffff"
         android:layout_above="@+id/progressBar1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="63dp"
-        android:textColor="#ffffff" />
+        android:layout_margin="15dp" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/wolf"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="MangaWolf"
+        android:id="@+id/textView8"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffff"
+        android:textIsSelectable="false"
+        android:textSize="50dp"
+        android:typeface="serif" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="This might take some time."
+        android:textColor="#ffffff"
+        android:id="@+id/textView10"
+        android:layout_above="@+id/maintext"
+        android:layout_centerHorizontal="true"
+        />
 </RelativeLayout>

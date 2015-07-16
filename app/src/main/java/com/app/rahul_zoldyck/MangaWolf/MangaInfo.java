@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 
 
@@ -60,12 +59,12 @@ String name,desc,path;
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_manga_info, menu);
 
- /*       MenuItem m=(MenuItem)findViewById(R.id.action_fav);
+
         int f=handle.getfav(name);
         if(f==1)
-            m.setChecked(true);                                 //TODO:debug this crap
+            menu.findItem(R.id.action_fav).setChecked(true);
         if(f==0)
-            m.setChecked(false);*/
+            menu.findItem(R.id.action_fav).setChecked(false);
 
 
         return true;
@@ -78,25 +77,21 @@ String name,desc,path;
 
 
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this,Settings.class));
             return true;
         }
         if (id == R.id.action_fav){
-            int f=handle.getfav(name);
-            if(f==1)
-                item.setChecked(true);                                 //TODO:debug this crap
-            if(f==0)
-                item.setChecked(false);
 
             if(item.isChecked()){
                 item.setChecked(false);
                 handle.setfav(name,0);
-                Toast.makeText(this,"Removed from Favorites",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,name+" removed from Favorites",Toast.LENGTH_SHORT).show();
             }
             else{
 
                 item.setChecked(true);
                 handle.setfav(name,1);
-                Toast.makeText(this,"Added to Favorites",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,name+" added to Favorites",Toast.LENGTH_SHORT).show();
             }
         }
 

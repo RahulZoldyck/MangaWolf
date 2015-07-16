@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:orientation="vertical" android:padding="16dp">
+    android:orientation="vertical" android:padding="16dp"
+    android:background="@drawable/black">
 
     <TextView
         android:layout_width="wrap_content"
@@ -10,7 +11,8 @@
         android:text="MangaWolf"
         android:id="@+id/textView4"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:textColor="#BAD3FA" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,7 +21,8 @@
         android:text="Choose the manga to be made as Widget"
         android:id="@+id/textView5"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginBottom="15dp"
+        android:textColor="#ffffff" />
 
     <GridView
         android:layout_width="match_parent"

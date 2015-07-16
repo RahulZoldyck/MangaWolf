@@ -53,6 +53,10 @@ public  class PlaceholderFragment extends Fragment {
         for(int i=0;i<3;i++)
             s=s.replaceAll("__","_");
         s=s.toLowerCase();
+        while(s.endsWith("_")){
+            s=s.substring(0,s.length()-1);
+            Log.i("namechange","updated->"+s);
+        }
         return s;
     }
 
@@ -211,7 +215,7 @@ public  class PlaceholderFragment extends Fragment {
                     img = doc.getElementsByTag("img");
 
                     for (Element i : img) {
-                        if (i.attr("src").contains("manga"))
+                        if (i.attr("src").contains("/manga/"))
                             imgurl = i.attr("src");
                     }
                     try {
