@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Preferred update Time \n(in hrs) "
+            android:text="Preferred update frequency \n(in hrs) "
             android:layout_weight="100"
             android:layout_gravity="center"
             android:id="@+id/textView7"

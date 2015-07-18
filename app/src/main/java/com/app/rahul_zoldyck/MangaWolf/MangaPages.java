@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -41,7 +42,7 @@ public class MangaPages extends ActionBarActivity {
     }
 
     String URL,name,Path;
-    Integer pno,chap,totpage,temp;//todo: remove temp
+    Integer pno,chap,totpage,totchap;
     Zoomable img;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,55 +70,18 @@ public class MangaPages extends ActionBarActivity {
            name= b.getString("name");
             chap=b.getInt("chapter");
             totpage=b.getInt("totpages");
-            temp=b.getInt("temp");
+            totchap=b.getInt("temp");
             pno=1;
             SharedPreferences share=getSharedPreferences("pno", MODE_PRIVATE);
             SharedPreferences.Editor editor=share.edit();
             editor.putString("pno",String.valueOf(pno));
             editor.apply();
-            URL= OpenerActivity.URL1+parsestring(name)+ OpenerActivity.URL+String.valueOf(chap)+"/";
+
             Path= OpenerActivity.PATH+name+ File.separator;
 
 
         }
 
-    }
-    private float x1,x2;
-    static final int MIN_DISTANCE = 150;
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        switch(event.getAction())
-        {
-            case MotionEvent.ACTION_DOWN:
-                x1 = event.getX();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = event.getX();
-                float deltaX = x2 - x1;
-
-                if (Math.abs(deltaX) > MIN_DISTANCE)
-                {
-                    // Left to Right swipe action
-                    if (x2 > x1)
-                    {
-                        //Toast.makeText(this, "Left to Right swipe [Next]", Toast.LENGTH_SHORT).show ();
-                    }
-
-                    // Right to left swipe action
-                    else
-                    {
-                       // Toast.makeText(this, "Right to Left swipe [Previous]", Toast.LENGTH_SHORT).show ();
-                    }
-
-                }
-                else
-                {
-                    // consider as something else - a screen tap for example
-                }
-                break;
-        }
-        return super.onTouchEvent(event);
     }
 
     @Override
@@ -140,23 +104,19 @@ public class MangaPages extends ActionBarActivity {
 
     private void setImage(Integer pno) {
         if (pno>totpage || pno<1){
-            //TODO: fill this up
            sendback();
         }
+        URL= OpenerActivity.URL1+parsestring(name)+ OpenerActivity.URL+String.valueOf(chap)+"/";
         Path= OpenerActivity.PATH+name+ File.separator+"Chapter" + String.valueOf(chap)+File.separator+"Chapter"+String.valueOf(chap)+" Page"+String.valueOf(pno)+".jpg";
         File folder = new File(Path);
-       // Log.i("test1",Path+"-->"+folder.exists());
-       // Toast.makeText(MangaPages.this,Path,Toast.LENGTH_SHORT).show();
         if (!folder.exists()) {
             String url=URL+String.valueOf(pno)+".html";
             Alternate s=new Alternate();
             s.execute(url);
-            //Toast.makeText(MangaPages.this,"Internet",Toast.LENGTH_SHORT).show();
         }
         else {
             img=(Zoomable)findViewById(R.id.pages);
             img.setImageBitmap(BitmapFactory.decodeFile(Path));
-          //  Toast.makeText(MangaPages.this,"device",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -219,10 +179,11 @@ public class MangaPages extends ActionBarActivity {
             super.onPostExecute(bitmap);
         }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-           // sendback();
-            super.onProgressUpdate(values);
-        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        startService(new Intent(this,CleanerService.class));
+        super.onDestroy();
     }
 }

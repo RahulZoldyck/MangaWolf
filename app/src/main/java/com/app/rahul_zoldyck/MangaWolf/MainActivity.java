@@ -104,6 +104,8 @@ public class MainActivity extends Activity {
             if(!isNetworkAvailable()){
                 startActivity(new Intent(this,Interneterror.class));
             }
+            Alarm a=new Alarm();
+            a.SetAlarm(this);
            firsttime f=new firsttime();
             f.execute();
         }

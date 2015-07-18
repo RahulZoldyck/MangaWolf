@@ -25,6 +25,8 @@ public class Settings extends ActionBarActivity {
                         SharedPreferences.Editor pref=getSharedPreferences(OpenerActivity.SHARETAG+"min", Context.MODE_PRIVATE).edit();
                         pref.putInt("time", newVal);
                         pref.apply();
+                        Alarm a=new Alarm();
+                        a.SetAlarm(Settings.this);
                         Toast.makeText(Settings.this,"Success fully updated the preferred update time",Toast.LENGTH_SHORT).show();
                     }
                 }

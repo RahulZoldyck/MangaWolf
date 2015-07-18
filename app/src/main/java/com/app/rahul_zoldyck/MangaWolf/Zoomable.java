@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 public class Zoomable extends ImageView {
     public interface Zoldyck {
-        public void swipednext(); //TODO: only wen original size should be modified
+        public void swipednext();
 
         public void swipedprevious();
     }
@@ -108,13 +108,13 @@ public class Zoomable extends ImageView {
 
                         if (mode == DRAG) {
 
-                            float deltaX = curr.x - last.x;
+                            float spX = curr.x - last.x;
 
-                            float deltaY = curr.y - last.y;
+                            float spY = curr.y - last.y;
 
-                            float fixTransX = getFixDragTrans(deltaX, viewWidth, origWidth * saveScale);
+                            float fixTransX = getFixDragTrans(spX, viewWidth, origWidth * saveScale);
 
-                            float fixTransY = getFixDragTrans(deltaY, viewHeight, origHeight * saveScale);
+                            float fixTransY = getFixDragTrans(spY, viewHeight, origHeight * saveScale);
 
                             matrix.postTranslate(fixTransX, fixTransY);
 
@@ -128,21 +128,20 @@ public class Zoomable extends ImageView {
 
                     case MotionEvent.ACTION_UP:
                         x2 = event.getX();
-                        float deltaX = x2 - x1;
+                        float spX = x2 - x1;
 
-                        if (Math.abs(deltaX) > MIN_DISTANCE)
+                        if (Math.abs(spX) > MIN_DISTANCE)
                         {
-                            // Left to Right swipe action
+
                             if (x2 > x1)
                             {
-                               Log.i("Zoomable","privious");
+                                if(saveScale==1)
                                 myevent.swipedprevious();
                             }
 
-                            // Right to left swipe action
+
                             else
-                            {
-                                Log.i("Zoomable","next");
+                            {  if(saveScale==1)
                                 myevent.swipednext();
                             }
 
@@ -182,9 +181,7 @@ public class Zoomable extends ImageView {
     }
 
     public void setMaxZoom(float x) {
-
         maxScale = x;
-
     }
 
     public void setOnTouchListener() {
@@ -290,7 +287,7 @@ public class Zoomable extends ImageView {
 
     }
 
-    float getFixDragTrans(float delta, float viewSize, float contentSize) {
+    float getFixDragTrans(float sp, float viewSize, float contentSize) {
 
         if (contentSize <= viewSize) {
 
@@ -298,7 +295,7 @@ public class Zoomable extends ImageView {
 
         }
 
-        return delta;
+        return sp;
 
     }
 
@@ -336,6 +333,7 @@ public class Zoomable extends ImageView {
             int bmHeight = drawable.getIntrinsicHeight();
 
             Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
+            Log.i("size","view width"+viewWidth);
 
             float scaleX = (float) viewWidth / (float) bmWidth;
 
@@ -345,7 +343,6 @@ public class Zoomable extends ImageView {
 
             matrix.setScale(scale, scale);
 
-            // Center the image
 
             float redundantYSpace = (float) viewHeight - (scale * (float) bmHeight);
 
