@@ -202,5 +202,6 @@ public class MangaPages extends ActionBarActivity {
         i.putExtra("totpages",totchap);
         i.putExtra("url",Url);
        startActivity(i);
+       finish();
     }
 }
