@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -18,12 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -72,6 +71,13 @@ String name,url;
             nam=(TextView)findViewById(R.id.listname);
             img=(ImageView)findViewById(R.id.listimg);
             nam.setText(name);
+            //trebucbi.ttf
+
+            Typeface face= Typeface.createFromAsset(getAssets(), "fonts/trebucbi.ttf");
+            nam.setTypeface(face);
+
+
+
             img.setImageBitmap(BitmapFactory.decodeFile(url));
         }
      list=(ListView)findViewById(R.id.chapterlist);
@@ -80,46 +86,20 @@ String name,url;
             chaps[i]="Chapter "+String.valueOf(totchap-i);
         }
 
-     list.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,chaps));
+     list.setAdapter(new Mylistadapter(this,name,chaps));
         list.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
-                        final int test=prefi.getInt("pno",-1);
+                        SharedPreferences prefi=getSharedPreferences(name+"_"+"Chapter "+String.valueOf(pos),MODE_PRIVATE);
+                        final int test=prefi.getInt("pno01",-1);
                         totpage h=new totpage();
                         pos=totchap-position;
                         if(test==-1) {
                             h.execute(OpenerActivity.URL1 + parsestring(name) + OpenerActivity.URL + String.valueOf(pos) + File.separator + "1.html");
                         }
                         else {
-                            SharedPreferences pref=getSharedPreferences(OpenerActivity.SHARETAG+"download", Context.MODE_PRIVATE);
-                            boolean isdownload=pref.getBoolean("download",false);
-                            if(!isdownload){
-                                new AlertDialog.Builder(ChapterList.this)
-                                        .setTitle("Reading Option")
-                                        .setMessage("Do you want to make this chapter available for offline")
-                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Intent j=new Intent(ChapterList.this,DownloadService.class);
-                                                j.putExtra("anime",name);
-                                                j.putExtra("totpages",test);
-                                                j.putExtra("chapter", pos);
-                                                j.putExtra("download",true);
-                                                if(isNetworkAvailable())
-                                                    startService(j);
-                                                Log.i("zold","sent int is "+String.valueOf(test));
-                                                Intent i= new Intent(ChapterList.this,MangaPages.class);
-                                                i.putExtra("name",name);
-                                                i.putExtra("chapter",pos);
-                                                i.putExtra("totpages",test);
-                                                i.putExtra("temp",totchap);
-                                                startActivity(i);
-                                            }
-                                        })
-                                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
                                                 Intent j=new Intent(ChapterList.this,DownloadService.class);
                                                 j.putExtra("anime",name);
                                                 j.putExtra("totpages",test);
@@ -133,28 +113,8 @@ String name,url;
                                                 i.putExtra("chapter",pos);
                                                 i.putExtra("totpages",test);
                                                 i.putExtra("temp",totchap);
+                                                i.putExtra("url",url);
                                                 startActivity(i);
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_menu_upload)
-                                        .show();}
-
-                            else{
-                                Intent j=new Intent(ChapterList.this,DownloadService.class);
-                                j.putExtra("anime",name);
-                                j.putExtra("totpages",test);
-                                j.putExtra("chapter", pos);
-                                j.putExtra("download",true);
-                                if(isNetworkAvailable())
-                                    startService(j);
-                                Log.i("zold","sent int is "+String.valueOf(test));
-                                Intent i= new Intent(ChapterList.this,MangaPages.class);
-                                i.putExtra("name",name);
-                                i.putExtra("chapter",pos);
-                                i.putExtra("totpages",test);
-                                i.putExtra("temp",totchap);
-                                startActivity(i);
-                            }
                         }
                     }
                 }
@@ -210,9 +170,10 @@ String name,url;
                             i.putExtra("chapter",pos);
                             i.putExtra("totpages",raw);
                             i.putExtra("temp",totchap);
-                            SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
+                            i.putExtra("url",url);
+                            SharedPreferences prefi=getSharedPreferences(name+"_"+"Chapter "+String.valueOf(pos),MODE_PRIVATE);
                             SharedPreferences.Editor editor=prefi.edit();
-                            editor.putInt("pno",raw);
+                            editor.putInt("pno01",raw);
                             editor.apply();
 
                             startActivity(i);
@@ -233,9 +194,10 @@ String name,url;
                             i.putExtra("chapter",pos);
                             i.putExtra("totpages",raw);
                             i.putExtra("temp",totchap);
-                            SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
+                            i.putExtra("url",url);
+                            SharedPreferences prefi=getSharedPreferences(name+"_"+"Chapter "+String.valueOf(pos),MODE_PRIVATE);
                             SharedPreferences.Editor editor=prefi.edit();
-                            editor.putInt("pno",raw);
+                            editor.putInt("pno01",raw);
                             editor.apply();
 
                             startActivity(i);
@@ -258,9 +220,10 @@ String name,url;
                 i.putExtra("chapter",pos);
                 i.putExtra("totpages",raw);
                 i.putExtra("temp",totchap);
-                SharedPreferences prefi=getSharedPreferences(name+"_"+String.valueOf(pos),MODE_PRIVATE);
+                i.putExtra("url",url);
+                SharedPreferences prefi=getSharedPreferences(name+"_"+"Chapter "+String.valueOf(pos),MODE_PRIVATE);
                 SharedPreferences.Editor editor=prefi.edit();
-                editor.putInt("pno",raw);
+                editor.putInt("pno01",raw);
                 editor.apply();
 
                 startActivity(i);

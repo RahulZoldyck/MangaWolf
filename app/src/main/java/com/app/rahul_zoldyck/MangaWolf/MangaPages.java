@@ -8,11 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.widget.Toast;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,8 +36,8 @@ public class MangaPages extends ActionBarActivity {
         return s;
     }
 
-    String URL,name,Path;
-    Integer pno,chap,totpage,totchap;
+    String URL,name,Path,Url;
+    Integer pno,maxpno,chap,totpage,totchap;
     Zoomable img;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +47,21 @@ public class MangaPages extends ActionBarActivity {
         img.setEventListener(new Zoomable.Zoldyck() {
             @Override
             public void swipednext() {
-
-                ++pno;
+                if(pno<totpage){
+                    ++pno;
+                    maxpno=pno;
+                }
+                else
+                    sendback();
                 setImage(pno);
             }
 
             @Override
             public void swipedprevious() {
-
-                --pno;
+                if(pno>1)
+                    --pno;
+                else
+                sendback();
                 setImage(pno);
             }
         });
@@ -71,7 +72,7 @@ public class MangaPages extends ActionBarActivity {
             chap=b.getInt("chapter");
             totpage=b.getInt("totpages");
             totchap=b.getInt("temp");
-            pno=1;
+            Url=b.getString("url");
             SharedPreferences share=getSharedPreferences("pno", MODE_PRIVATE);
             SharedPreferences.Editor editor=share.edit();
             editor.putString("pno",String.valueOf(pno));
@@ -88,7 +89,7 @@ public class MangaPages extends ActionBarActivity {
     protected void onPause() {
         SharedPreferences share=getSharedPreferences("pno", MODE_PRIVATE);
         SharedPreferences.Editor editor=share.edit();
-        editor.putString("pno",String.valueOf(pno));
+        editor.putInt(name+"_"+"Chapter "+String.valueOf(chap)+"pno1", maxpno);
         editor.apply();
         super.onPause();
     }
@@ -96,7 +97,12 @@ public class MangaPages extends ActionBarActivity {
     @Override
     protected void onResume() {
         SharedPreferences preferences=getSharedPreferences("pno",MODE_PRIVATE);
-        pno=Integer.parseInt(preferences.getString("pno", "1"));
+        Log.i("side","osj"+preferences.getInt(name+"_"+"Chapter "+String.valueOf(chap)+"pno1", 1));
+        String temp=Integer.toString(preferences.getInt(name+"_"+"Chapter "+String.valueOf(chap)+"pno1", 1));
+        pno=Integer.valueOf(temp);
+        maxpno=pno;
+        if(pno==0)
+            pno=1;
         setImage(pno);
 
         super.onResume();
@@ -104,6 +110,7 @@ public class MangaPages extends ActionBarActivity {
 
     private void setImage(Integer pno) {
         if (pno>totpage || pno<1){
+
            sendback();
         }
         URL= OpenerActivity.URL1+parsestring(name)+ OpenerActivity.URL+String.valueOf(chap)+"/";
@@ -145,6 +152,8 @@ public class MangaPages extends ActionBarActivity {
 
                 e.printStackTrace();
             }
+
+
             Log.i("higf","2");
             String url;
             Element link=doc.select("img").first();
@@ -185,5 +194,13 @@ public class MangaPages extends ActionBarActivity {
     protected void onDestroy() {
         startService(new Intent(this,CleanerService.class));
         super.onDestroy();
+    }
+    @Override
+    public void onBackPressed() {
+        Intent i=new Intent(this,ChapterList.class);
+        i.putExtra("animename",name);
+        i.putExtra("totpages",totchap);
+        i.putExtra("url",Url);
+       startActivity(i);
     }
 }
